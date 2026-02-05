@@ -21,7 +21,7 @@ class Game(Static):
 		Game {
 			width: auto;
 			height: auto;
-			border: solid purple;
+/*			border: solid purple; */
 		}
 
 		#PlayerLevelChoice {
@@ -49,7 +49,9 @@ class Game(Static):
 		return self.PlayerLevelWeights[self.PlayerLevel]
 
 	def compose(self):
-		self.Board = Board.Board(Weights = self.Get_CurrentPlayerLevel_Weights())
+		Width			: int		= 30
+		Height			: int		= 20
+		self.Board = Board.Board(Weights = self.Get_CurrentPlayerLevel_Weights(), Width=Width, Height=Height)
 		yield self.Board
 
 

@@ -25,11 +25,12 @@ class Board(Static):
 		Board {
 			width: auto;
 			height: auto;
-			border: inner yellow;			
+			border: heavy #404040;			
 		}
 
 	.BlockRow {
 		width:auto;
+		height: auto;
 	}
 	'''
 
@@ -172,13 +173,13 @@ class Board(Static):
 				Counts.append(BombCount)
 				block.Adjacent_Bomb_Count = BombCount
 
-		self.notify(f"Counts={Counts}")
+		#self.notify(f"Counts={Counts}")
 
 	@on(Block.Block.Click)
 	def Handle_Click(self, Event: Block.Block.Click):
 		#Event.Control.Uncovered = True
 		#self.Reveal_Adjacent_Blocks(Block_X=Event.Control.X, Block_Y=Event.Control.Y)
-		self.notify(f"{Event.Control.Adjacent_Bomb_Count}")
+		#self.notify(f"{Event.Control.Adjacent_Bomb_Count}")
 		self.Reveal_Adjacent_Blocks(block=Event.Control) #, Exclude=[Block.Block_Bomb])
 
 		match type(Event.Control):
