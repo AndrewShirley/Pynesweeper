@@ -126,7 +126,6 @@ class ScoreBoard(Static):
 		List = self.query_children("Static")
 
 		StyleName:str = ["EndGameHappy", "EndGameSad"][int(PlayerDied)]
-		self.notify(f"Adding Classes {StyleName}")
 		for W in List:
 			W.add_class(StyleName)
 

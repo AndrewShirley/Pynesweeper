@@ -62,10 +62,12 @@ class Face(Static):
 	FaceStyle           : reactive[FaceTypes]   = reactive(FaceTypes.Happy)           	# This changes the displayed Face Style
 	FrameNumber         : reactive[int]			= reactive(0)							# Which Frame Number in the Animation to Display
 
+	def watch_FaceStyle(self, NewValue:int):											# If the Face Style Changes, Reset the FrameNumber to 0
+		self.FrameNumber = 0
+
 
 	def on_mount(self) -> None:
 		self.IntervalTimer = self.set_interval(.8, self.Update_Frame)
-
 
 	def Update_Frame(self):
 		NewFrameNumber:int = self.FrameNumber + 1
@@ -79,11 +81,14 @@ class Face(Static):
 		if type(Val) == str: return 1
 		return len(Val)
 
-
 	def Get_Frame_str(self) -> str:
 		Val = self.Faces[self.FaceStyle]
 		if type(Val) == str: return Val
+		#if self.FrameNumber >= len(Val): return ""										
+
 		return Val[self.FrameNumber]
+		
+
 
 
 

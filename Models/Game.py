@@ -11,13 +11,7 @@ from Models import ScoreBoard
 from Models import GameButtons
 from Models import Block
 from Models import Board
-
-class PlayerLevels(Enum):
-		Beginner			= 1
-		Intermediate		= 2
-		Expert				= 3
-		BaaaHaaa			= 4
-
+from Models.Definitions import PlayerLevels, PlayerLevelWeights, Default_Player_Level
 
 
 class Game(Static):
@@ -44,8 +38,7 @@ class Game(Static):
 		'''
 		Width							: int					= 10
 		Height							: int					= 10
-		Player_Level					: PlayerLevels			= PlayerLevels.Beginner
-
+		Player_Level					: PlayerLevels			= Default_Player_Level
 
 
 	def __init__(self, *args, GameConfig:"Game.Game_Config | None" = None ,**kwargs):
@@ -56,15 +49,8 @@ class Game(Static):
 	def watch_PlayerLevel(self, old_message: str, new_message: str) -> None:
 		self.update()
 
-	PlayerLevelWeights: dict[PlayerLevels, list[int]]	= {				# Safe Squares to Bomb Sqaures Ratio
-		PlayerLevels.Beginner			: [20,1],
-		PlayerLevels.Intermediate		: [10,1],
-		PlayerLevels.Expert				: [5,1],
-		PlayerLevels.BaaaHaaa			: [0,1]
-	}
-
 	def Get_CurrentPlayerLevel_Weights(self) -> list[int]:
-		return self.PlayerLevelWeights[self.Config.Player_Level]
+		return PlayerLevelWeights[self.Config.Player_Level]
 
 	def Make_Board(self, GameConfig:"Game.Game_Config") -> Board.Board:
 		'''			Returns a new Board Object with the supplied GameConfig applied			'''
@@ -72,7 +58,10 @@ class Game(Static):
 		board:Board.Board=Board.Board(
 			Weights = self.Get_CurrentPlayerLevel_Weights(),
 			Width=GameConfig.Width,
-			Height=GameConfig.Height)
+			Height=GameConfig.Height
+		)
+
+		#self.notify(f"Made Board with Weigrhts: {self.Get_CurrentPlayerLevel_Weights()}")
 		
 		return board
 
@@ -90,7 +79,8 @@ class Game(Static):
 			yield self.Board
 
 	def on_mount(self):
-		self.Update_Bombs_Remaining()
+		self.Sync_HelperComponenets()		
+		#self.Update_Bombs_Remaining()
 
 	def Update_Bombs_Remaining(self) -> int:
 		'''		Updates the Scoreboard to show the latest Bomb-Remaining count and returns the Bomb Remaining Count		'''
@@ -104,17 +94,25 @@ class Game(Static):
 		FaceStyle: str = "Happy" if not PlayerDied else "Sad"
 
 		self.ScoreBoard.Set_FaceStyle(FaceStyle=FaceStyle)
-
 		self.ScoreBoard.EndGame(PlayerDied=PlayerDied)
+		self.Board.Reveal_All()
 
 	def RestartGame(self):
 		'''			Starts a new Game, using self.Config and Mounts it into the Game Container		'''
+		self.loading = True
 		self.Board.remove()
+
 		self.Board = self.Make_Board(GameConfig=self.Config)
 		self.BoardContainer.mount(self.Board)
+		self.Sync_HelperComponenets()
+		self.loading = False
 
+	def Sync_HelperComponenets(self):
+		'''			Syncs the Scoreboard and Game Buttons with self.Config			'''
+		self.GameButtons.Set_InputForm(Level=self.Config.Player_Level, Width=self.Config.Width, Height=self.Config.Height)
 		self.ScoreBoard.Restart()
 		self.Update_Bombs_Remaining()
+
 
 	@on(Board.Board.BoardStatus)
 	def Handle_BoardStatus_Update(self, Event:Board.Board.BoardStatus):
@@ -131,7 +129,17 @@ class Game(Static):
 		self.End_Game()
 
 
-	@on(Button.Pressed, "#Button_NewGame")
-	def Handle_NewGame_Button(self, Event: Button.Pressed):
-		self.notify(f"NEW GAME BUTTON PRESSED  {Event.control.id}")
+	# @on(Button.Pressed, "#Button_NewGame")
+	# def Handle_NewGame_Button(self, Event: Button.Pressed):
+	# 	self.notify(f"NEW GAME BUTTON PRESSED  {Event.control.id}")
+	# 	self.RestartGame()
+
+
+	@on(GameButtons.GameButtons.NewGame)
+	def Handle_NewGame(self, Event: GameButtons.GameButtons.NewGame):
+		self.Config.Player_Level		= Event.Level
+		self.Config.Width				= Event.Width
+		self.Config.Height				= Event.Height
 		self.RestartGame()
+
+	

@@ -34,6 +34,10 @@ class Block(Static):
 			border-left: solid white;
 		}
 
+		Block.Marked {
+			background: orange;
+		}
+
 	'''
 
 	def __init__(self, *args,  CoveredChr:str = "?", UncoveredChr: str = "!", **kwargs) -> None:
@@ -140,7 +144,6 @@ class Block_Bomb(Block):
 		Block_Bomb {
         	text-align: center;
         	content-align: center middle;
-			background: #E00000;
 		}
 	'''
 	def __init__(self, *args, **kwargs) -> None:

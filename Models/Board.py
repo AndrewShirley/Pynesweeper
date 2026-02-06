@@ -67,7 +67,7 @@ class Board(Static):
 
 	
 	def Create_Blocks_Matrix(self):
-		'''		Creates the 2X2 Blocks Matrix, setting each Block to None		'''
+		'''		Creates the 2X2 Blocks Matrix, setting each Block to a Random Block, using Player Level Weights		'''
 		self.Blocks = []
 		for Y in range(self.Height):
 			self.Blocks.append([])												# Make a new Row
@@ -120,6 +120,10 @@ class Board(Static):
 			if not type(B) in Exclude:
 				B.Uncovered = True
 				if DisableBlocks: B.disabled = True
+
+	def Reveal_All(self):
+		for block in self:
+			block.Uncovered = True
 
 
 	def Query_Blocks(self, AroundBlock:Block.Block, FilterFunc:Callable | None = None, Travel:bool=True) -> set[Block.Block]:
@@ -205,7 +209,13 @@ class Board(Static):
 							self.Reveal_Adjacent_Blocks(block=Event.control, Exclude=[Block.Block_Bomb], Travel=True, DisableBlocks=True)							# type: ignore
 
 			case _:																	# Any Mouse Button but the Left One
-				Event.control.Marked = True
+				Marked:bool = not Event.control.Marked
+				if Marked:
+					Event.control.add_class("Marked")
+				else:
+					Event.control.remove_class("Marked")
+
+				Event.control.Marked = Marked
 
 		self.Raise_BoardStatus()
 
@@ -220,9 +230,6 @@ class Board(Static):
 
 	def DisableBoard(self):
 		self.disabled = True
-
-
-
 
 
 
@@ -258,5 +265,8 @@ class BoardIterator:
         if self.ColumnIndex >= self.Board.Width:
             self.ColumnIndex = 0
             self.RowIndex += 1
-        
+
+
+       
         return block
+	
