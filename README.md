@@ -11,9 +11,9 @@ Ongoing work :)
 
 Useage:
 
-RunMe.Bat
-
 
 Best used from a Command Prompt in a Windows Terminal: Press Windows-Key, type "Terminal"
+
+<img width="1088" height="665" alt="ScreenShot_Intermediate" src="https://github.com/user-attachments/assets/8e7e9998-4c4e-449c-b88b-f8047273f7b9" />
 
 
