@@ -56,34 +56,6 @@ class Block(Static):
 
 
 
-	# class Click(Message):
-	# 	'''		The Message Class for Bubbling/Raising Click Events		'''
-	# 	def __init__(self, Control:"Block") -> None:
-	# 		super().__init__()
-	# 		self.Control = Control
-			
-	# def on_click(self, Event: Click) -> None:
-	# 	'''			Called when the User Clicks a Tile		'''
-	# 	self.Raise_Click(Event)
-
-	# def Raise_Click(self, Msg:Message):
-	# 	'''
-	# 		Raises a Click Message.
-	# 	'''
-	# 	Msg:Block.Click = Block.Click(Control=self)
-	# 	Msg.control
-	# 	self.post_message(message=Msg)
-
-	# @property
-	# def Uncovered(self) -> bool:
-	# 	return self._Uncovered
-
-
-	# @Uncovered.setter
-	# def Uncovered(self, Value: bool):
-	# 	self._Uncovered = Value
-	# 	self.update(self.Get_Current_Character(), layout=False)		# Layout won't change, always the same size
-
 
 	def Get_Character(self, Which: BlockCharacterTypes) -> str:
 		'''		Returns the Character to Represent this Block		'''

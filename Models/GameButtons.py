@@ -1,5 +1,6 @@
 from textual import on
 from textual.widgets import Static, Button, RadioButton, RadioSet, Input, Label
+from textual.containers import Container
 from Models.Definitions import PlayerLevels
 from textual.message import Message
 from textual.validation import Number
@@ -12,13 +13,19 @@ class GameButtons(Static):
 	DEFAULT_CSS = '''
 		GameButtons {
 			layout: horizontal;
+			background: $boost;
+			border: round $primary;
 		}
 
 		GameButtons RadioSet {
 			layout: horizontal;
 		}
 
-		
+	
+		GameButtons Input {
+			background: $panel;
+		}
+
 		#Input_Width {
 			width: 12;
 		}
@@ -30,8 +37,10 @@ class GameButtons(Static):
 
 		#BoardSizeContainer {
 			layout: horizontal;
+			height: 100%;
 			width: auto;
 		}
+
 
 	'''
 
@@ -75,7 +84,7 @@ class GameButtons(Static):
 		yield Button("END GAME", id="Button_EndGame")
 
 
-		with Static(id="BoardSizeContainer"):
+		with Container(id="BoardSizeContainer"):
 			yield Label("Board:")
 
 			yield self.Input_Width
@@ -90,8 +99,8 @@ class GameButtons(Static):
 
 
 	def InputFormIsValid(self) -> bool:
-		Valid_Width		: bool			= self.Input_Width.validate(self.Input_Width.value).is_valid
-		Valid_Height	: bool			= self.Input_Height.validate(self.Input_Height.value).is_valid
+		Valid_Width		: bool			= self.Input_Width.validate(self.Input_Width.value).is_valid						# type: ignore
+		Valid_Height	: bool			= self.Input_Height.validate(self.Input_Height.value).is_valid						# type: ignore
 		Valid_Level		: bool			= self.RadioSet_PlayerLevels.pressed_index >= 0
 
 		return Valid_Width and Valid_Height and Valid_Level
@@ -105,7 +114,7 @@ class GameButtons(Static):
 
 		Width			: int			= int(self.Input_Width.value)
 		Height			: int			= int(self.Input_Height.value)
-		Level			: PlayerLevels	= PlayerLevels[self.RadioSet_PlayerLevels.pressed_button.id]
+		Level			: PlayerLevels	= PlayerLevels[self.RadioSet_PlayerLevels.pressed_button.id]						# type: ignore
 
 
 		self.Raise_NewGame(Level=Level, Width=Width, Height=Height)
@@ -114,6 +123,5 @@ class GameButtons(Static):
 	def Set_InputForm(self, Level: PlayerLevels, Width: int, Height:int):
 		self.Input_Width.value = str(Width)
 		self.Input_Height.value = str(Height)
-		self.RadioSet_PlayerLevels.value = Level.name
-
-		self.query_one(f"#{Level.name}").value = True
+		self.RadioSet_PlayerLevels.value = Level.name																		# type: ignore
+		self.query_one(f"#{Level.name}").value = True																		# type: ignore
