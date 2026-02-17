@@ -108,7 +108,9 @@ class Block(Static):
 		return Chr
 
 	def render(self):
-		return self.Get_Current_Character()
+		CurrentChr: str = self.Get_Current_Character()
+		if CurrentChr == "0": CurrentChr = " "
+		return CurrentChr
 
 
 class Block_Bomb(Block):
