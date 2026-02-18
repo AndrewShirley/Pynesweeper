@@ -11,9 +11,13 @@ Simply download the Executable and execute from a Windows Terminal. (Bash Versio
 Alternatively, you can clone this repo and run the game from the main folder with:
 
 **Windows:**
-run.bat
+Run.bat
+
+**Bash:**
+Coming Soon
 
 Best used from a Command Prompt in a Windows Terminal: Press Windows-Key, type "Terminal"
 
 <img width="1010" height="643" alt="ScreenShot_Intermediate" src="https://github.com/user-attachments/assets/9c740e0a-f2fd-40d6-9ca7-9b480e430a12" />
+
 
